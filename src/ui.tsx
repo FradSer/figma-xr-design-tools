@@ -6,6 +6,7 @@ import {
   render,
   Text,
   TextboxNumeric,
+  Toggle,
   VerticalSpace,
 } from '@create-figma-plugin/ui'
 import { emit } from '@create-figma-plugin/utilities'
@@ -18,6 +19,7 @@ function Plugin() {
   const [hFOVCount, setHFOVCount] = useState<number | null>(60)
   const [vFOVCount, setVFOVCount] = useState<number | null>(30)
   const [distanceCount, setDistanceCount] = useState<number | null>(60)
+  const [changeName, setChangeName] = useState<boolean>(false)
 
   const [horizontalFOVString, setHorizontalFOVString] = useState('60')
   const [verticalFOVString, setVerticalFOVString] = useState('30')
@@ -25,17 +27,28 @@ function Plugin() {
 
   const handleCreateFrameButtonClick = useCallback(
     function () {
-      if (hFOVCount !== null && vFOVCount !== null && distanceCount !== null) {
+      if (
+        hFOVCount !== null &&
+        vFOVCount !== null &&
+        distanceCount !== null &&
+        changeName !== null
+      ) {
         emit<CreateFrameHandler>(
           'CREATE_FRAME',
           hFOVCount,
           vFOVCount,
-          distanceCount
+          distanceCount,
+          changeName
         )
       }
     },
-    [hFOVCount, vFOVCount, distanceCount]
+    [hFOVCount, vFOVCount, distanceCount, changeName]
   )
+
+  function handleChangeName(value: boolean) {
+    setChangeName(value)
+  }
+
   const handleCloseButtonClick = useCallback(function () {
     emit<CloseHandler>('CLOSE')
   }, [])
@@ -74,6 +87,12 @@ function Plugin() {
         value={distanceString}
         variant="border"
       />
+      <VerticalSpace space="small" />
+      <Toggle onValueChange={handleChangeName} value={changeName}>
+        <Text>
+          <Muted>Change name of frame with above</Muted>
+        </Text>
+      </Toggle>
       <VerticalSpace space="extraLarge" />
       <Columns space="extraSmall">
         <Button fullWidth onClick={handleCreateFrameButtonClick}>

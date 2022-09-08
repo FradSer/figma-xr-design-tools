@@ -18,13 +18,24 @@ function convertFOV(fov: number, distance: number) {
 export default function () {
   once<CreateFrameHandler>(
     'CREATE_FRAME',
-    function (hFOVCount: number, vFOVCount: number, distanceCount: number) {
+    function (
+      hFOVCount: number,
+      vFOVCount: number,
+      distanceCount: number,
+      changeName: boolean
+    ) {
       const nodes: Array<SceneNode> = []
       const frame = figma.createFrame()
 
       let width = convertFOV(hFOVCount, distanceCount)
       let height = convertFOV(vFOVCount, distanceCount)
       frame.resize(width, height)
+
+      if (changeName) {
+        let name = `H ${hFOVCount}º, V ${vFOVCount}º, D: ${distanceCount}cm`
+        frame.name = name
+      }
+
       figma.currentPage.appendChild(frame)
       nodes.push(frame)
 
@@ -37,7 +48,7 @@ export default function () {
     figma.closePlugin()
   })
   showUI({
-    height: 300,
-    width: 240,
+    height: 320,
+    width: 260,
   })
 }
