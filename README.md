@@ -1,4 +1,6 @@
-# FOV to Frame
+# FOV to Frame ![](https://img.shields.io/badge/A%20FRAD%20PRODUCT-v1.0.0-green) [![Twitter Follow](https://img.shields.io/twitter/follow/FradSer?style=social)](https://twitter.com/FradSer)
+
+Get the right frame by horizontal / vertical FOV, and distance.
 
 ## Development guide
 
