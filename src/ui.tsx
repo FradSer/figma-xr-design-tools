@@ -90,7 +90,7 @@ function Plugin() {
       <VerticalSpace space="small" />
       <Toggle onValueChange={handleChangeName} value={changeName}>
         <Text>
-          <Muted>Change name of frame with above</Muted>
+          <Muted>Add above information to guide</Muted>
         </Text>
       </Toggle>
       <VerticalSpace space="extraLarge" />

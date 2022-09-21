@@ -25,19 +25,39 @@ export default function () {
       changeName: boolean
     ) {
       const nodes: Array<SceneNode> = []
-      const frame = figma.createFrame()
+
+      const rectangle = figma.createRectangle()
+      const selectedNodes = figma.currentPage.selection
 
       let width = convertFOV(hFOVCount, distanceCount)
       let height = convertFOV(vFOVCount, distanceCount)
-      frame.resize(width, height)
+      rectangle.resize(width, height)
+      rectangle.fills = [{ type: 'SOLID', color: { r: 1, g: 0, b: 0 } }]
+      rectangle.opacity = 0.25
+      rectangle.locked = true
 
       if (changeName) {
         let name = `H ${hFOVCount}º, V ${vFOVCount}º, D: ${distanceCount}cm`
-        frame.name = name
+        rectangle.name = name
       }
 
-      figma.currentPage.appendChild(frame)
-      nodes.push(frame)
+      rectangle.constraints = {
+        horizontal: 'CENTER',
+        vertical: 'CENTER',
+      }
+
+      if (selectedNodes.length == 1 && selectedNodes[0].type === 'FRAME') {
+        const selectedFrame = selectedNodes[0] as FrameNode
+        selectedFrame.appendChild(rectangle)
+        rectangle.x = (selectedFrame.width - rectangle.width) / 2
+        rectangle.y = (selectedFrame.height - rectangle.height) / 2
+        nodes.push(selectedFrame)
+      } else {
+        const frame = figma.createFrame()
+        frame.resize(width, height)
+        frame.appendChild(rectangle)
+        nodes.push(frame)
+      }
 
       figma.currentPage.selection = nodes
       figma.viewport.scrollAndZoomIntoView(nodes)
