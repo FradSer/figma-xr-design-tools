@@ -3,16 +3,7 @@ import { once, showUI } from '@create-figma-plugin/utilities'
 import { CreateFrameHandler } from './types'
 import { CloseHandler } from '../types'
 
-function convertFOV(fov: number, distance: number) {
-  const vault = Math.ceil(
-    2 * (distance / 100) * Math.tan((fov / 2) * (Math.PI / 180)) * 1000
-  )
-
-  if (vault % 2 != 0) {
-    return vault + 1
-  }
-  return vault
-}
+import { convertFOVDistanceToLength } from './utilities/convert-fov-distance-to-length'
 
 export default function () {
   once<CreateFrameHandler>(
@@ -28,8 +19,8 @@ export default function () {
       const rectangle = figma.createRectangle()
       const selectedNodes = figma.currentPage.selection
 
-      let width = convertFOV(hFOVCount, distanceCount)
-      let height = convertFOV(vFOVCount, distanceCount)
+      let width = convertFOVDistanceToLength(hFOVCount, distanceCount)
+      let height = convertFOVDistanceToLength(vFOVCount, distanceCount)
       rectangle.resize(width, height)
       rectangle.fills = [{ type: 'SOLID', color: { r: 1, g: 0, b: 0 } }]
       rectangle.opacity = 0.25

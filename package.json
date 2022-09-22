@@ -26,9 +26,9 @@
     "name": "XR Design Tools",
     "menu": [
       {
-        "name": "FOV Guide",
-        "main": "src/fov-guide/main.ts",
-        "ui": "src/fov-guide/ui.tsx"
+        "name": "FOV Guide Generator",
+        "main": "src/fov-guide-generator/main.ts",
+        "ui": "src/fov-guide-generator/ui.tsx"
       }
     ]
   },
