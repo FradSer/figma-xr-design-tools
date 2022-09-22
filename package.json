@@ -29,6 +29,11 @@
         "name": "FOV Guide Generator",
         "main": "src/fov-guide-generator/main.ts",
         "ui": "src/fov-guide-generator/ui.tsx"
+      },
+      {
+        "name": "FOV Calculator",
+        "main": "src/fov-calculator/main.ts",
+        "ui": "src/fov-calculator/ui.tsx"
       }
     ]
   },
