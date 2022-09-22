@@ -1,10 +1,9 @@
 import { once, showUI } from '@create-figma-plugin/utilities'
 
-import { CloseHandler, CreateFrameHandler } from './types'
+import { CreateFrameHandler } from './types'
+import { CloseHandler } from '../types'
 
 function convertFOV(fov: number, distance: number) {
-  console.log(fov, distance)
-
   const vault = Math.ceil(
     2 * (distance / 100) * Math.tan((fov / 2) * (Math.PI / 180)) * 1000
   )

@@ -23,9 +23,14 @@
       "figma"
     ],
     "id": "1149634536150338038",
-    "name": "FOV to Frame",
-    "main": "src/main.ts",
-    "ui": "src/ui.tsx"
+    "name": "XR Design Tools",
+    "menu": [
+      {
+        "name": "FOV Guide",
+        "main": "src/fov-guide/main.ts",
+        "ui": "src/fov-guide/ui.tsx"
+      }
+    ]
   },
   "prettier": {
     "parser": "typescript",

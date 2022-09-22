@@ -13,7 +13,8 @@ import { emit } from '@create-figma-plugin/utilities'
 import { h } from 'preact'
 import { useCallback, useState } from 'preact/hooks'
 
-import { CloseHandler, CreateFrameHandler } from './types'
+import { CreateFrameHandler } from './types'
+import { CloseHandler } from '../types'
 
 function Plugin() {
   const [hFOVCount, setHFOVCount] = useState<number | null>(60)
