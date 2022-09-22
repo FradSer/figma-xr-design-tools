@@ -22,7 +22,7 @@
     "editorType": [
       "figma"
     ],
-    "id": "1151780980464141919",
+    "id": "1149634536150338038",
     "name": "FOV to Frame",
     "main": "src/main.ts",
     "ui": "src/ui.tsx"
