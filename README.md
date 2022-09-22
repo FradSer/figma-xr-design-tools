@@ -1,6 +1,10 @@
-# FOV to Frame ![](https://img.shields.io/badge/A%20FRAD%20PRODUCT-v1.0.0-green) [![Twitter Follow](https://img.shields.io/twitter/follow/FradSer?style=social)](https://twitter.com/FradSer)
+# XR Design Tools ![](https://img.shields.io/badge/A%20FRAD%20PRODUCT-v1.0.0-green) [![Twitter Follow](https://img.shields.io/twitter/follow/FradSer?style=social)](https://twitter.com/FradSer)
 
-Get the right frame by horizontal / vertical FOV, and distance.
+## FOV Guide
+Get the right guide by horizontal / vertical FOV, and distance.
+
+## FOV Calculator
+Calculate the horizontal / vertical FOV from element size and distanceFr.
 
 ## Development guide
 
