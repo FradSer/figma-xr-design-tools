@@ -37,7 +37,7 @@ export default function () {
       rectangle.locked = true
 
       if (changeName) {
-        let name = `H ${hFOVCount}º, V ${vFOVCount}º, D: ${distanceCount}cm`
+        let name = `_FOVGuide: H ${hFOVCount}º, V ${vFOVCount}º, D ${distanceCount}cm`
         rectangle.name = name
       }
 
