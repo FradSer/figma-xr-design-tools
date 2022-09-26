@@ -50,13 +50,22 @@ function Plugin() {
       <VerticalSpace space="extraLarge" />
       <Columns space="extraSmall">
         <Button fullWidth onClick={handleCalculatorFOVButtonClick}>
-          Create
+          Calculate
         </Button>
         <Button fullWidth onClick={handleCloseButtonClick} secondary>
           Close
         </Button>
       </Columns>
       <VerticalSpace space="large" />
+      <Text>
+        <Muted>How to use:</Muted>
+      </Text>
+      <VerticalSpace space="small" />
+      <Text>
+        <Muted>Select an element and enter its expected distance.</Muted>
+      </Text>
+      <VerticalSpace space="large" />
+
       <Text align="right">
         <Muted>Made with ❤️ by Lark Innovations</Muted>
       </Text>
