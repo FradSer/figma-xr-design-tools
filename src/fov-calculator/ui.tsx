@@ -17,9 +17,9 @@ import { FOVCalculatorHandler } from './types'
 import { CloseHandler } from '../types'
 
 function Plugin() {
-  const [distanceCount, setDistanceCount] = useState<number | null>(60)
+  const [distanceCount, setDistanceCount] = useState<number | null>(36)
 
-  const [distanceString, setDistanceString] = useState('60')
+  const [distanceString, setDistanceString] = useState('36')
 
   const handleCalculatorFOVButtonClick = useCallback(
     function () {
