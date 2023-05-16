@@ -6,12 +6,13 @@ import {
   render,
   Text,
   TextboxNumeric,
-  Toggle,
   VerticalSpace,
 } from '@create-figma-plugin/ui'
 import { emit } from '@create-figma-plugin/utilities'
 import { h } from 'preact'
-import { useCallback, useState, useEffect } from 'preact/hooks'
+import { useCallback, useState } from 'preact/hooks'
+
+import ByFrad  from '../common/by-frad'
 
 import { FOVCalculatorHandler } from './types'
 import { CloseHandler } from '../types'
@@ -65,10 +66,7 @@ function Plugin() {
         <Muted>Select an element and enter its expected distance.</Muted>
       </Text>
       <VerticalSpace space="large" />
-
-      <Text align="right">
-        <Muted>Made with ❤️ by Lark Innovations</Muted>
-      </Text>
+      <ByFrad />
     </Container>
   )
 }

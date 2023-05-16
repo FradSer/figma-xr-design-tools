@@ -13,6 +13,8 @@ import { emit } from '@create-figma-plugin/utilities'
 import { h } from 'preact'
 import { useCallback, useState } from 'preact/hooks'
 
+import ByFrad  from '../common/by-frad'
+
 import { CreateFrameHandler } from './types'
 import { CloseHandler } from '../types'
 
@@ -104,9 +106,7 @@ function Plugin() {
         </Button>
       </Columns>
       <VerticalSpace space="large" />
-      <Text align="right">
-        <Muted>Made with ❤️ by Lark Innovations</Muted>
-      </Text>
+      <ByFrad />
     </Container>
   )
 }
