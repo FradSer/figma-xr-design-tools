@@ -38,6 +38,9 @@ export default function () {
 
       if (selectedNodes.length == 1 && selectedNodes[0].type === 'FRAME') {
         const selectedFrame = selectedNodes[0] as FrameNode
+        if (selectedFrame.clipsContent) {
+          selectedFrame.clipsContent = false
+        }
         selectedFrame.appendChild(rectangle)
         rectangle.x = (selectedFrame.width - rectangle.width) / 2
         rectangle.y = (selectedFrame.height - rectangle.height) / 2
