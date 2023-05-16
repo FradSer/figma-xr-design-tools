@@ -19,12 +19,12 @@ import { CloseHandler } from '../types'
 function Plugin() {
   const [hFOVCount, setHFOVCount] = useState<number | null>(60)
   const [vFOVCount, setVFOVCount] = useState<number | null>(30)
-  const [distanceCount, setDistanceCount] = useState<number | null>(60)
-  const [changeName, setChangeName] = useState<boolean>(false)
+  const [distanceCount, setDistanceCount] = useState<number | null>(36)
+  const [changeName, setChangeName] = useState<boolean>(true)
 
   const [horizontalFOVString, setHorizontalFOVString] = useState('60')
   const [verticalFOVString, setVerticalFOVString] = useState('30')
-  const [distanceString, setDistanceString] = useState('60')
+  const [distanceString, setDistanceString] = useState('36')
 
   const handleCreateFrameButtonClick = useCallback(
     function () {
