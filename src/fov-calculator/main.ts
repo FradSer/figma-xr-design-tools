@@ -2,26 +2,24 @@ import {
   once,
   on,
   showUI,
-  formatErrorMessage,
-  formatSuccessMessage,
+  loadSettingsAsync,
+  saveSettingsAsync,
+  emit,
 } from '@create-figma-plugin/utilities'
 
-import { FOVCalculatorHandler } from './types'
-import { CloseHandler } from '../types'
+import { SelectionChangedHandler, SubmitHandler } from './utilities/types'
+import { CloseUIHandler, Settings } from '../utilities/types'
+import { defaultSettings } from '../utilities/settings'
+import { convertLengthDistanceToFOV } from './utilities/convert-length-distance-to-fov'
 
-function convertLengthDistanceToFOV(length: number, distance: number) {
-  if (length == 0 || distance == 0) {
-    return null
-  }
+export default async function () {
+  const settings = await loadSettingsAsync(defaultSettings)
 
-  return (
-    (Math.atan(length / 2 / (distance / 100) / 1000) / (Math.PI / 180)) *
-    2
-  ).toFixed(2)
-}
+  on<SubmitHandler>('SUBMIT', async function (settings: Settings) {
+    await saveSettingsAsync(settings)
 
-export default function () {
-  on<FOVCalculatorHandler>('FOV_CALCULATOR', function (distanceCount: number) {
+    const { vFov, hFov, distance, changeName } = settings
+
     const selectedNodes = figma.currentPage.selection
     const selectedNode = selectedNodes[0]
 
@@ -33,18 +31,28 @@ export default function () {
     let width = selectedNode.width
     let height = selectedNode.height
 
-    let hFOV = convertLengthDistanceToFOV(width, distanceCount)
-    let vFOV = convertLengthDistanceToFOV(height, distanceCount)
+    let hFOV = convertLengthDistanceToFOV(width, distance)
+    let vFOV = convertLengthDistanceToFOV(height, distance)
 
     figma.notify(`FOV: H ${hFOV}º, V ${vFOV}º`)
   })
 
-  once<CloseHandler>('CLOSE', function () {
+  once<CloseUIHandler>('CLOSE_UI', function () {
     figma.closePlugin()
   })
 
-  showUI({
-    height: 240,
-    width: 260,
+  figma.on('selectionchange', function () {
+    emit<SelectionChangedHandler>(
+      'SELECTION_CHANGED',
+      figma.currentPage.selection.length > 0
+    )
   })
+
+  showUI(
+    {
+      height: 240,
+      width: 260,
+    },
+    { ...settings, hasSelection: figma.currentPage.selection.length > 0 }
+  )
 }

@@ -1,39 +1,60 @@
 import {
   Button,
-  Columns,
   Container,
   Muted,
   render,
   Text,
   TextboxNumeric,
+  useForm,
   VerticalSpace,
 } from '@create-figma-plugin/ui'
-import { emit } from '@create-figma-plugin/utilities'
+import { emit, on } from '@create-figma-plugin/utilities'
 import { h } from 'preact'
-import { useCallback, useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 
-import ByFrad  from '../common/by-frad'
+import ByFrad from '../common/by-frad'
 
-import { FOVCalculatorHandler } from './types'
-import { CloseHandler } from '../types'
+import { FormState, FOVCalculatorProps } from './utilities/types'
+import { CloseUIHandler } from '../utilities/types'
+import {
+  SelectionChangedHandler,
+  SubmitHandler,
+} from '../fov-guide-generator/utilities/types'
 
-function Plugin() {
-  const [distanceCount, setDistanceCount] = useState<number | null>(36)
-
-  const [distanceString, setDistanceString] = useState('36')
-
-  const handleCalculatorFOVButtonClick = useCallback(
-    function () {
-      if (distanceCount !== null) {
-        emit<FOVCalculatorHandler>('FOV_CALCULATOR', distanceCount)
+function Plugin(props: FOVCalculatorProps) {
+  const { formState, setFormState, initialFocus, handleSubmit } =
+    useForm<FormState>(
+      { ...props },
+      {
+        close: function () {
+          emit<CloseUIHandler>('CLOSE_UI')
+        },
+        submit: function ({ hFov, vFov, distance, changeName }: FormState) {
+          emit<SubmitHandler>('SUBMIT', { hFov, vFov, distance, changeName })
+        },
+        validate: function ({ distance }: FormState) {
+          return distance !== null
+        },
       }
+    )
+
+  useEffect(
+    function () {
+      return on<SelectionChangedHandler>(
+        'SELECTION_CHANGED',
+        function (hasSelection: boolean) {
+          setFormState(hasSelection, 'hasSelection')
+        }
+      )
     },
-    [distanceCount]
+    [setFormState]
   )
 
-  const handleCloseButtonClick = useCallback(function () {
-    emit<CloseHandler>('CLOSE')
-  }, [])
+  const [distanceString, setDistanceString] = useState(
+    props.distance == null ? '36' : `${props.distance}`
+  )
+
+  const { hasSelection } = formState
 
   return (
     <Container space="medium">
@@ -43,20 +64,18 @@ function Plugin() {
       </Text>
       <VerticalSpace space="small" />
       <TextboxNumeric
-        onNumericValueInput={setDistanceCount}
+        {...initialFocus}
+        name="distance"
+        minimum={0}
+        onNumericValueInput={setFormState}
         onValueInput={setDistanceString}
         value={distanceString}
         variant="border"
       />
       <VerticalSpace space="extraLarge" />
-      <Columns space="extraSmall">
-        <Button fullWidth onClick={handleCalculatorFOVButtonClick}>
-          Calculate
-        </Button>
-        <Button fullWidth onClick={handleCloseButtonClick} secondary>
-          Close
-        </Button>
-      </Columns>
+      <Button fullWidth onClick={handleSubmit} disabled={!hasSelection}>
+        Calculate
+      </Button>
       <VerticalSpace space="large" />
       <Text>
         <Muted>How to use:</Muted>
