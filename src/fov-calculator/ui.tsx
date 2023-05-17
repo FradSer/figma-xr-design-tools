@@ -50,6 +50,14 @@ function Plugin(props: FOVCalculatorProps) {
     [setFormState]
   )
 
+  const [horizontalFOVString, setHorizontalFOVString] = useState(
+    props.hFov == null ? '60' : `${props.hFov}`
+  )
+
+  const [verticalFOVString, setVerticalFOVString] = useState(
+    props.vFov == null ? '30' : `${props.vFov}`
+  )
+
   const [distanceString, setDistanceString] = useState(
     props.distance == null ? '36' : `${props.distance}`
   )

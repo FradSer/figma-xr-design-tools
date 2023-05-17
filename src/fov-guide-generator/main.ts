@@ -16,7 +16,7 @@ export default async function () {
   once<SubmitHandler>('SUBMIT', async function (settings: Settings) {
     await saveSettingsAsync(settings)
 
-    const { vFov, hFov, distance, changeName } = settings
+    const { hFov, vFov, distance, changeName } = settings
 
     const nodes: Array<SceneNode> = []
 

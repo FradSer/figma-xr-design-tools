@@ -43,7 +43,9 @@ function Plugin(props: FOVGuideGeneratorProps) {
         }: FormState) {
           return (
             hasSelection &&
-            (hFov !== null || vFov !== null || distance !== null) &&
+            hFov !== null &&
+            vFov !== null &&
+            distance !== null &&
             changeName !== null
           )
         },
