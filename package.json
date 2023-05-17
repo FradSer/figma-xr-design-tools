@@ -43,12 +43,5 @@
     "singleQuote": true,
     "printWidth": 80,
     "semi": false
-  },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "prettier"
-    ]
   }
 }
