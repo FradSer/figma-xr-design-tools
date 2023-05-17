@@ -1,60 +1,79 @@
 import {
   Button,
-  Columns,
   Container,
   Muted,
   render,
   Text,
   TextboxNumeric,
   Toggle,
+  useForm,
   VerticalSpace,
 } from '@create-figma-plugin/ui'
-import { emit } from '@create-figma-plugin/utilities'
+import { emit, on } from '@create-figma-plugin/utilities'
 import { h } from 'preact'
-import { useCallback, useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 
-import ByFrad  from '../common/by-frad'
+import ByFrad from '../common/by-frad'
 
-import { CreateFrameHandler } from './types'
-import { CloseHandler } from '../types'
+import {
+  FormState,
+  SelectionChangedHandler,
+  FOVGuideGeneratorProps,
+  SubmitHandler,
+} from './utilities/types'
+import { CloseUIHandler } from '../utilities/types'
 
-function Plugin() {
-  const [hFOVCount, setHFOVCount] = useState<number | null>(60)
-  const [vFOVCount, setVFOVCount] = useState<number | null>(30)
-  const [distanceCount, setDistanceCount] = useState<number | null>(36)
-  const [changeName, setChangeName] = useState<boolean>(true)
-
-  const [horizontalFOVString, setHorizontalFOVString] = useState('60')
-  const [verticalFOVString, setVerticalFOVString] = useState('30')
-  const [distanceString, setDistanceString] = useState('36')
-
-  const handleCreateFrameButtonClick = useCallback(
-    function () {
-      if (
-        hFOVCount !== null &&
-        vFOVCount !== null &&
-        distanceCount !== null &&
-        changeName !== null
-      ) {
-        emit<CreateFrameHandler>(
-          'CREATE_FRAME',
-          hFOVCount,
-          vFOVCount,
-          distanceCount,
-          changeName
-        )
+function Plugin(props: FOVGuideGeneratorProps) {
+  const { formState, setFormState, initialFocus, handleSubmit } =
+    useForm<FormState>(
+      { ...props },
+      {
+        close: function () {
+          emit<CloseUIHandler>('CLOSE_UI')
+        },
+        submit: function ({ hFov, vFov, distance, changeName }: FormState) {
+          emit<SubmitHandler>('SUBMIT', { hFov, vFov, distance, changeName })
+        },
+        validate: function ({
+          hasSelection,
+          hFov,
+          vFov,
+          distance,
+          changeName,
+        }: FormState) {
+          return (
+            hasSelection &&
+            (hFov !== null || vFov !== null || distance !== null) &&
+            changeName !== null
+          )
+        },
       }
+    )
+
+  useEffect(
+    function () {
+      return on<SelectionChangedHandler>(
+        'SELECTION_CHANGED',
+        function (hasSelection: boolean) {
+          setFormState(hasSelection, 'hasSelection')
+        }
+      )
     },
-    [hFOVCount, vFOVCount, distanceCount, changeName]
+    [setFormState]
   )
 
-  function handleChangeName(value: boolean) {
-    setChangeName(value)
-  }
+  const [horizontalFOVString, setHorizontalFOVString] = useState(
+    props.hFov == null ? '60' : `${props.hFov}`
+  )
+  const [verticalFOVString, setVerticalFOVString] = useState(
+    props.vFov == null ? '30' : `${props.vFov}`
+  )
+  const [distanceString, setDistanceString] = useState(
+    props.distance == null ? '36' : `${props.distance}`
+  )
 
-  const handleCloseButtonClick = useCallback(function () {
-    emit<CloseHandler>('CLOSE')
-  }, [])
+  const { changeName } = formState
+
   return (
     <Container space="medium">
       <VerticalSpace space="large" />
@@ -63,7 +82,10 @@ function Plugin() {
       </Text>
       <VerticalSpace space="small" />
       <TextboxNumeric
-        onNumericValueInput={setHFOVCount}
+        {...initialFocus}
+        name="hFov"
+        minimum={0}
+        onNumericValueInput={setFormState}
         onValueInput={setHorizontalFOVString}
         value={horizontalFOVString}
         variant="border"
@@ -74,7 +96,9 @@ function Plugin() {
       </Text>
       <VerticalSpace space="small" />
       <TextboxNumeric
-        onNumericValueInput={setVFOVCount}
+        name="vFov"
+        minimum={0}
+        onNumericValueInput={setFormState}
         onValueInput={setVerticalFOVString}
         value={verticalFOVString}
         variant="border"
@@ -85,26 +109,23 @@ function Plugin() {
       </Text>
       <VerticalSpace space="small" />
       <TextboxNumeric
-        onNumericValueInput={setDistanceCount}
+        name="distance"
+        minimum={0}
+        onNumericValueInput={setFormState}
         onValueInput={setDistanceString}
         value={distanceString}
         variant="border"
       />
       <VerticalSpace space="small" />
-      <Toggle onValueChange={handleChangeName} value={changeName}>
+      <Toggle name="changeName" onValueChange={setFormState} value={changeName}>
         <Text>
           <Muted>Add above information to guide</Muted>
         </Text>
       </Toggle>
       <VerticalSpace space="extraLarge" />
-      <Columns space="extraSmall">
-        <Button fullWidth onClick={handleCreateFrameButtonClick}>
-          Create
-        </Button>
-        <Button fullWidth onClick={handleCloseButtonClick} secondary>
-          Close
-        </Button>
-      </Columns>
+      <Button fullWidth onClick={handleSubmit}>
+        Create
+      </Button>
       <VerticalSpace space="large" />
       <ByFrad />
     </Container>

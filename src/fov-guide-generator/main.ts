@@ -1,68 +1,73 @@
-import { once, showUI } from '@create-figma-plugin/utilities'
+import {
+  loadSettingsAsync,
+  once,
+  saveSettingsAsync,
+  showUI,
+} from '@create-figma-plugin/utilities'
 
-import { CreateFrameHandler } from './types'
-import { CloseHandler } from '../types'
-
+import { SubmitHandler } from './utilities/types'
+import { CloseUIHandler, Settings } from '../utilities/types'
 import { convertFOVDistanceToLength } from './utilities/convert-fov-distance-to-length'
+import { defaultSettings } from '../utilities/settings'
 
-export default function () {
-  once<CreateFrameHandler>(
-    'CREATE_FRAME',
-    function (
-      hFOVCount: number,
-      vFOVCount: number,
-      distanceCount: number,
-      changeName: boolean
-    ) {
-      const nodes: Array<SceneNode> = []
+export default async function () {
+  const settings = await loadSettingsAsync(defaultSettings)
 
-      const rectangle = figma.createRectangle()
-      const selectedNodes = figma.currentPage.selection
+  once<SubmitHandler>('SUBMIT', async function (settings: Settings) {
+    await saveSettingsAsync(settings)
 
-      let width = convertFOVDistanceToLength(hFOVCount, distanceCount)
-      let height = convertFOVDistanceToLength(vFOVCount, distanceCount)
-      rectangle.resize(width, height)
-      rectangle.fills = [{ type: 'SOLID', color: { r: 1, g: 0, b: 0 } }]
-      rectangle.opacity = 0.25
-      rectangle.locked = true
+    const { vFov, hFov, distance, changeName } = settings
 
-      if (changeName) {
-        let name = `_FOVGuide: H ${hFOVCount}º, V ${vFOVCount}º, D ${distanceCount}cm`
-        rectangle.name = name
-      }
+    const nodes: Array<SceneNode> = []
 
-      rectangle.constraints = {
-        horizontal: 'CENTER',
-        vertical: 'CENTER',
-      }
+    const rectangle = figma.createRectangle()
+    const selectedNodes = figma.currentPage.selection
 
-      if (selectedNodes.length == 1 && selectedNodes[0].type === 'FRAME') {
-        const selectedFrame = selectedNodes[0] as FrameNode
-        if (selectedFrame.clipsContent) {
-          selectedFrame.clipsContent = false
-        }
-        selectedFrame.appendChild(rectangle)
-        rectangle.x = (selectedFrame.width - rectangle.width) / 2
-        rectangle.y = (selectedFrame.height - rectangle.height) / 2
-        nodes.push(selectedFrame)
-      } else {
-        const frame = figma.createFrame()
-        frame.resize(width, height)
-        frame.appendChild(rectangle)
-        frame.clipsContent = false
-        nodes.push(frame)
-      }
+    let width = convertFOVDistanceToLength(hFov, distance)
+    let height = convertFOVDistanceToLength(vFov, distance)
+    rectangle.resize(width, height)
+    rectangle.fills = [{ type: 'SOLID', color: { r: 1, g: 0, b: 0 } }]
+    rectangle.opacity = 0.25
+    rectangle.locked = true
 
-      figma.currentPage.selection = nodes
-      figma.viewport.scrollAndZoomIntoView(nodes)
-      figma.closePlugin()
+    if (changeName) {
+      rectangle.name = `_FOVGuide: H ${hFov}º, V ${vFov}º, D ${distance}cm`
     }
-  )
-  once<CloseHandler>('CLOSE', function () {
+
+    rectangle.constraints = {
+      horizontal: 'CENTER',
+      vertical: 'CENTER',
+    }
+
+    if (selectedNodes.length == 1 && selectedNodes[0].type === 'FRAME') {
+      const selectedFrame = selectedNodes[0]
+      if (selectedFrame.clipsContent) {
+        selectedFrame.clipsContent = false
+      }
+      selectedFrame.appendChild(rectangle)
+      rectangle.x = (selectedFrame.width - rectangle.width) / 2
+      rectangle.y = (selectedFrame.height - rectangle.height) / 2
+      nodes.push(selectedFrame)
+    } else {
+      const frame = figma.createFrame()
+      frame.resize(width, height)
+      frame.appendChild(rectangle)
+      frame.clipsContent = false
+      nodes.push(frame)
+    }
+
+    figma.currentPage.selection = nodes
+    figma.viewport.scrollAndZoomIntoView(nodes)
     figma.closePlugin()
   })
-  showUI({
-    height: 320,
-    width: 260,
+  once<CloseUIHandler>('CLOSE_UI', function () {
+    figma.closePlugin()
   })
+  showUI(
+    {
+      height: 320,
+      width: 260,
+    },
+    { ...settings, hasSelection: true }
+  )
 }
