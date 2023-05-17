@@ -49,6 +49,7 @@ export default function () {
         const frame = figma.createFrame()
         frame.resize(width, height)
         frame.appendChild(rectangle)
+        frame.clipsContent = false
         nodes.push(frame)
       }
 
