@@ -6,7 +6,7 @@ export function convertFOVDistanceToLength(
   let _fov = fov === null ? 0 : fov
 
   const vault = Math.ceil(
-    2 * (_distance / 100) * Math.tan((_fov / 2) * (Math.PI / 180)) * 1000
+    2 * _distance * Math.tan((_fov * (Math.PI / 180) / 2) ) * 10
   )
   if (vault % 2 != 0) {
     return vault + 1
