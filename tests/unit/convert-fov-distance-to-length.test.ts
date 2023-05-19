@@ -1,26 +1,23 @@
-import {
-  convertFOVDistanceToLength
-} from '../../src/fov-guide-generator/utilities/convert-fov-distance-to-length'
+import { convertFOVDistanceToLength } from '../../src/fov-guide-generator/utilities/convert-fov-distance-to-length'
 
 describe('convertFOVDistanceToLength', () => {
-  test('Calculate object width', () => {
-    const distance = 100;
-    const fov = 90;
-    const expectedWidth = 2000;
+  test('should calculate object width correctly', () => {
+    const distance = 100
+    const fov = 90
+    const expectedWidth = 2000
 
-    const calculatedWidth = convertFOVDistanceToLength(fov, distance);
+    const calculatedWidth = convertFOVDistanceToLength(fov, distance)
 
-    expect(calculatedWidth).toBe(expectedWidth);
-  });
+    expect(calculatedWidth).toBe(expectedWidth)
+  })
 
-  test('Handle null values', () => {
-    // 定义测试用例的输入和预期输出
-    const distance = null;
-    const fov = null;
-    const expectedWidth = 0;
+  test('should handle null values and return 0 width', () => {
+    const distance = null
+    const fov = null
+    const expectedWidth = 0
 
-    const calculatedWidth = convertFOVDistanceToLength(fov, distance);
+    const calculatedWidth = convertFOVDistanceToLength(fov, distance)
 
-    expect(calculatedWidth).toBe(expectedWidth);
-  });
-});
+    expect(calculatedWidth).toBe(expectedWidth)
+  })
+})
