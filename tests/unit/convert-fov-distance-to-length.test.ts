@@ -20,4 +20,14 @@ describe('convertFOVDistanceToLength', () => {
 
     expect(calculatedWidth).toBe(expectedWidth)
   })
+
+  test('should handle negative values and return 0 width', () => {
+    const distance = -100
+    const fov = -90
+    const expectedWidth = 0
+
+    const calculatedWidth = convertFOVDistanceToLength(fov, distance)
+
+    expect(calculatedWidth).toBe(expectedWidth)
+  })
 })
