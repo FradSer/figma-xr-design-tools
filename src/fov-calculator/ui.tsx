@@ -73,12 +73,12 @@ function Plugin(props: FOVCalculatorProps) {
       <VerticalSpace space="small" />
       <TextboxNumeric
         {...initialFocus}
-        name="distance"
         minimum={0}
-        onNumericValueInput={setFormState}
+        onNumericValueInput={(value: number | null) =>
+          setFormState(value, 'distance')
+        }
         onValueInput={setDistanceString}
         value={distanceString}
-        variant="border"
       />
       <VerticalSpace space="extraLarge" />
       <Button fullWidth onClick={handleSubmit} disabled={!hasSelection}>

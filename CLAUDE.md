@@ -11,13 +11,16 @@ This is a Figma plugin for XR (Extended Reality) design tools, built with the Cr
 ## Common Commands
 
 ### Development
-- `npm run build` - Build the plugin with typecheck and minification
-- `npm run watch` - Build in watch mode with typecheck for development
-- `npm run test` - Run Jest unit tests
-- `npm run format` - Format TypeScript/TSX files with Prettier
+- `pnpm build` - Build the plugin with typecheck and minification
+- `pnpm build -- --no-typecheck` - Build without typecheck (use if Node.js type conflicts occur)
+- `pnpm watch` - Build in watch mode with typecheck for development
+- `pnpm test` - Run Jest unit tests
+- `pnpm format` - Format TypeScript/TSX files with Prettier
 
 ### Linting and Code Quality
-- ESLint configuration extends recommended, React, and Prettier rules
+- `pnpm eslint "src/**/*.{ts,tsx}"` - Run ESLint on TypeScript files
+- `pnpm format` - Format TypeScript/TSX files with Prettier
+- ESLint configuration extends recommended, TypeScript, React, and Prettier rules
 - Prettier is configured with TypeScript parser, 2-space tabs, single quotes, 80-char width, no semicolons
 
 ## Architecture
@@ -57,3 +60,10 @@ The plugin follows Create Figma Plugin conventions with separate main/UI entry p
 - Settings are persisted using plugin framework's `loadSettingsAsync`/`saveSettingsAsync`
 - UI communicates with main thread via event handlers (`SUBMIT`, `CLOSE_UI`, `SELECTION_CHANGED`)
 - Rectangle guides are created with red fill, 25% opacity, centered constraints, and locked by default
+
+## Important: Manifest Configuration
+
+- DO NOT manually edit `manifest.json` - it's auto-generated from `package.json`
+- DO NOT include `containsWidget` field for regular Figma plugins (only for widgets)
+- The plugin configuration in `package.json` under `figma-plugin` key generates the manifest
+- If you get manifest errors, check the `figma-plugin` configuration, not the manifest file directly

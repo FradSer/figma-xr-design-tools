@@ -85,12 +85,12 @@ function Plugin(props: FOVGuideGeneratorProps) {
       <VerticalSpace space="small" />
       <TextboxNumeric
         {...initialFocus}
-        name="hFov"
         minimum={0}
-        onNumericValueInput={setFormState}
+        onNumericValueInput={(value: number | null) =>
+          setFormState(value, 'hFov')
+        }
         onValueInput={setHorizontalFOVString}
         value={horizontalFOVString}
-        variant="border"
       />
       <VerticalSpace space="small" />
       <Text>
@@ -98,12 +98,12 @@ function Plugin(props: FOVGuideGeneratorProps) {
       </Text>
       <VerticalSpace space="small" />
       <TextboxNumeric
-        name="vFov"
         minimum={0}
-        onNumericValueInput={setFormState}
+        onNumericValueInput={(value: number | null) =>
+          setFormState(value, 'vFov')
+        }
         onValueInput={setVerticalFOVString}
         value={verticalFOVString}
-        variant="border"
       />
       <VerticalSpace space="small" />
       <Text>
@@ -111,15 +111,18 @@ function Plugin(props: FOVGuideGeneratorProps) {
       </Text>
       <VerticalSpace space="small" />
       <TextboxNumeric
-        name="distance"
         minimum={0}
-        onNumericValueInput={setFormState}
+        onNumericValueInput={(value: number | null) =>
+          setFormState(value, 'distance')
+        }
         onValueInput={setDistanceString}
         value={distanceString}
-        variant="border"
       />
       <VerticalSpace space="small" />
-      <Toggle name="changeName" onValueChange={setFormState} value={changeName}>
+      <Toggle
+        onValueChange={(value: boolean) => setFormState(value, 'changeName')}
+        value={changeName}
+      >
         <Text>
           <Muted>Add above information to guide</Muted>
         </Text>
